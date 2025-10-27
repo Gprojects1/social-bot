@@ -13,3 +13,4 @@ venv/
 env/
 ENV/
 .venv
+.json
