@@ -244,5 +244,160 @@ MORAL_SCHEMAS = {
                 "target_delta": {"Inspiring": 10, "Supportive": 10}
             }
         }
-    }
+    },
+    
+    "debt_of_gratitude": {
+        "name": "Долг благодарности",
+        "description": "Асимметричные отношения, где один участник чувствует себя обязанным другому за оказанную помощь или услугу",
+        "participant_roles": ["benefactor", "obligated"],
+        "conditions": {
+            "obligated_to_benefactor": [("Grateful", 20), ("Indebted", 15), ("Respectful", 15)],
+            "benefactor_to_obligated": [("Expectant", 15), ("Benevolent", 15), ("Slightly Superior", 10)]
+        },
+        "target_state": {
+            "obligated": {"Grateful": 25, "Indebted": 30, "Respectful": 25, "Dutiful": 20},
+            "benefactor": {"Expectant": 25, "Benevolent": 20, "Slightly Superior": 20, "Patient": 15}
+        },
+        "actions": {
+            "remind_of_debt": {
+                "description": "Напомнить о долге (благодетель)",
+                "author_delta": {"Expectant": 10, "Slightly Superior": 8},
+                "target_delta": {"Indebted": 12, "Dutiful": 10}
+            },
+            "fulfill_obligation": {
+                "description": "Выполнить часть долга (обязанный)",
+                "author_delta": {"Indebted": -12, "Dutiful": 10, "Grateful": 8},
+                "target_delta": {"Benevolent": 10, "Expectant": -8}
+            },
+            "offer_help": {
+                "description": "Предложить помощь (благодетель)",
+                "author_delta": {"Benevolent": 12, "Expectant": 8},
+                "target_delta": {"Indebted": 15, "Grateful": 10}
+            }
+        }
+    },
+
+    "uneasy_alliance": {
+        "name": "Ненадежный союз",
+        "description": "Вынужденное сотрудничество между участниками с фундаментальными разногласиями, основанное на общей цели",
+        "participant_roles": ["ally_a", "ally_b"],
+        "conditions": {
+            "ally_a_to_ally_b": [("Cooperative", 15), ("Suspicious", 15), ("Pragmatic", 10)],
+            "ally_b_to_ally_a": [("Cooperative", 15), ("Suspicious", 15), ("Pragmatic", 10)]
+        },
+        "target_state": {
+            "ally_a": {"Cooperative": 25, "Suspicious": 25, "Pragmatic": 30, "Cautious": 20},
+            "ally_b": {"Cooperative": 25, "Suspicious": 25, "Pragmatic": 30, "Cautious": 20}
+        },
+        "actions": {
+            "pragmatic_proposal": {
+                "description": "Предложить сугубо деловое соглашение",
+                "author_delta": {"Pragmatic": 12, "Cooperative": 8},
+                "target_delta": {"Pragmatic": 10, "Suspicious": -5}
+            },
+            "verify_honesty": {
+                "description": "Проверить честность союзника",
+                "author_delta": {"Suspicious": 10, "Cautious": 10},
+                "target_delta": {"Suspicious": 8, "Cautious": 8}
+            },
+            "shared_success": {
+                "description": "Достичь успеха вместе",
+                "author_delta": {"Cooperative": 15, "Suspicious": -10, "Pragmatic": 8},
+                "target_delta": {"Cooperative": 15, "Suspicious": -10, "Pragmatic": 8}
+            }
+        }
+    },
+
+    "hidden_admiration": {
+        "name": "Скрытое восхищение",
+        "description": "Один участник тайно восхищается другим, но не решается выразить это открыто из-за робости или социальных барьеров",
+        "participant_roles": ["admirer", "idol"],
+        "conditions": {
+            "admirer_to_idol": [("Admiring", 25), ("Respectful", 20), ("Hesitant", 15)],
+            "idol_to_admirer": [("Unaware", 20), ("Neutral", 15)] # Идол может быть вообще не в курсе
+        },
+        "target_state": {
+            "admirer": {"Admiring": 35, "Respectful": 25, "Hesitant": 25, "Inspired": 20},
+            "idol": {"Unaware": 25, "Neutral": 20, "Confident": 15} # Целевое состояние может не достигаться, если схема не активирована
+        },
+        "actions": {
+            "observe_from_afar": {
+                "description": "Наблюдать за объектом восхищения издалека",
+                "author_delta": {"Admiring": 8, "Hesitant": 5, "Inspired": 6},
+                "target_delta": {} # Идол ничего не замечает
+            },
+            "attempt_compliment": {
+                "description": "Попытаться сделать робкий комплимент",
+                "author_delta": {"Hesitant": 10, "Admiring": 8},
+                "target_delta": {"Unaware": -5, "Neutral": 5} # Идол может начать что-то подозревать
+            },
+            "confess_admiration": {
+                "description": "Признаться в восхищении (ключевое действие)",
+                "author_delta": {"Hesitant": -20, "Admiring": 15, "Respectful": 10},
+                "target_delta": {"Unaware": -20, "Flattered": 15, "Surprised": 10}
+            }
+        }
+    },
+
+    "parental_care": {
+        "name": "Родительская опека",
+        "description": "Асимметричные отношения заботы и защиты, где одна сторона оберегает и направляет другую",
+        "participant_roles": ["caregiver", "ward"],
+        "conditions": {
+            "caregiver_to_ward": [("Protective", 25), ("Nurturing", 20), ("Responsible", 20)],
+            "ward_to_caregiver": [("Trusting", 25), ("Dependent", 20), ("Respectful", 15)]
+        },
+        "target_state": {
+            "caregiver": {"Protective": 35, "Nurturing": 30, "Responsible": 30, "Patient": 25},
+            "ward": {"Trusting": 35, "Secure": 30, "Respectful": 25, "Obedient": 20}
+        },
+        "actions": {
+            "provide_comfort": {
+                "description": "Обеспечить комфорт и безопасность (опекун)",
+                "author_delta": {"Nurturing": 12, "Protective": 10},
+                "target_delta": {"Secure": 15, "Trusting": 12}
+            },
+            "set_boundary": {
+                "description": "Установить границы (опекун)",
+                "author_delta": {"Responsible": 10, "Patient": 8},
+                "target_delta": {"Obedient": 10, "Respectful": 8}
+            },
+            "seek_approval": {
+                "description": "Искать одобрения (подопечный)",
+                "author_delta": {"Respectful": 10, "Dependent": 8},
+                "target_delta": {"Nurturing": 10, "Protective": 8}
+            }
+        }
+    },
+
+    "professional_rivalry": {
+        "name": "Профессиональное соперничество",
+        "description": "Конкуренция, основанная на взаимном уважении к компетенциям и стремлении к совершенству",
+        "participant_roles": ["professional_a", "professional_b"],
+        "conditions": {
+            "professional_a_to_professional_b": [("Competitive", 20), ("Respectful", 15), ("Driven", 15)],
+            "professional_b_to_professional_a": [("Competitive", 20), ("Respectful", 15), ("Driven", 15)]
+        },
+        "target_state": {
+            "professional_a": {"Competitive": 30, "Respectful": 25, "Driven": 30, "Focused": 25},
+            "professional_b": {"Competitive": 30, "Respectful": 25, "Driven": 30, "Focused": 25}
+        },
+        "actions": {
+            "challenge_constructively": {
+                "description": "Бросить вызов в профессиональной сфере",
+                "author_delta": {"Competitive": 10, "Driven": 8},
+                "target_delta": {"Competitive": 10, "Driven": 8, "Respectful": 5}
+            },
+            "acknowledge_skill": {
+                "description": "Признать мастерство соперника",
+                "author_delta": {"Respectful": 12, "Competitive": 5},
+                "target_delta": {"Respectful": 10, "Focused": 8}
+            },
+            "set_new_standard": {
+                "description": "Установить новый стандарт качества",
+                "author_delta": {"Driven": 15, "Focused": 12, "Competitive": 10},
+                "target_delta": {"Driven": 12, "Competitive": 10}
+            }
+        }
+    },
 }

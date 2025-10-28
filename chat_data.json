@@ -1,0 +1,22 @@
+{
+  "participants": {
+    "-1": 1,
+    "8058551516": 2,
+    "5092237452": 3
+  },
+  "virtual_to_real": {
+    "1": {
+      "telegram_id": -1,
+      "username": "AI_Agent"
+    },
+    "2": {
+      "telegram_id": 8058551516,
+      "username": "misha2071"
+    },
+    "3": {
+      "telegram_id": 5092237452,
+      "username": "Rrrrrrrh1122"
+    }
+  },
+  "next_virtual_id": 4
+}

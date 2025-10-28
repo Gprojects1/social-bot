@@ -10,7 +10,7 @@ from emotions.analyzer import analyze_emotion_vector
 from moral_schemas.manager import MoralSchemaManager
 from utils.gpt_client import gpt_request
 from database.chat_db import chat_db
-
+from emotions.analyzer import analyze_emotions_per_target
 
 def extract_virtual_ids(text: str) -> list[int]:
     """Извлечь виртуальные ID из текста сообщения"""
@@ -102,12 +102,6 @@ async def process_message(sender_telegram_id: int, text: str, bot: Bot):
     # Извлекаем упоминания (виртуальные ID)
     mentioned_virtual_ids = extract_virtual_ids(text)
     
-    # Анализируем эмоции
-    emotion_vector = await analyze_emotion_vector(text)
-    top_emotions = [(EMOTIONS[i], round(emotion_vector[i], 1)) 
-                   for i in np.argsort(emotion_vector)[-5:] if emotion_vector[i] > 0]
-    
-    print(f"🔒 [ADMIN] 🧠 Распознанные эмоции: {top_emotions}")
     print(f"🔒 [ADMIN] 👥 Упоминания (виртуальные ID): {mentioned_virtual_ids if mentioned_virtual_ids else 'НЕТ'}")
     
     # Рассылаем сообщение всем участникам
@@ -119,10 +113,22 @@ async def process_message(sender_telegram_id: int, text: str, bot: Bot):
         print(f"{'='*70}\n")
         return
     
+    # НОВОЕ: Анализируем эмоции контекстно для каждого упомянутого участника
+    print(f"🔒 [ADMIN] 🧠 Анализирую эмоции контекстно для каждого участника...")
+    emotions_per_target = await analyze_emotions_per_target(text, mentioned_virtual_ids)
+    
     # ШАГ 1: ОБНОВЛЯЕМ ЭМОЦИИ (используем виртуальные ID)
-    print(f"\n🔒 [ADMIN] === ШАГ 1: ОБНОВЛЕНИЕ ЭМОЦИЙ ===")
+    print(f"\n🔒 [ADMIN] === ШАГ 1: ОБНОВЛЕНИЕ ЭМОЦИЙ (КОНТЕКСТНО) ===")
     
     for target_virtual_id in mentioned_virtual_ids:
+        # Получаем эмоциональный вектор для конкретного target_id
+        emotion_vector = emotions_per_target.get(target_virtual_id, np.zeros(len(EMOTIONS)))
+        
+        top_emotions = [(EMOTIONS[i], round(emotion_vector[i], 1)) 
+                       for i in np.argsort(emotion_vector)[-5:] if emotion_vector[i] > 0]
+        
+        print(f"🔒 [ADMIN] 🎯 Эмоции к ID {target_virtual_id}: {top_emotions}")
+        
         # Обновляем отношение АВТОРА к АДРЕСАТУ
         print(f"🔒 [ADMIN] ⬆️ Обновление: Virtual ID {sender_virtual_id} → Virtual ID {target_virtual_id} (коэф. 1.0)")
         emotion_model.update_relation(sender_virtual_id, target_virtual_id, emotion_vector.tolist())
@@ -189,6 +195,7 @@ async def process_message(sender_telegram_id: int, text: str, bot: Bot):
             print(f"🔒 [ADMIN] 📊 Эмоции Virtual ID {sender_virtual_id} → Virtual ID {AI_AGENT_VIRTUAL_ID}: {top_user_to_ai}")
     
     print(f"🔒 [ADMIN] === КОНЕЦ ОБРАБОТКИ ===\n")
+
 
 
 async def setup_handlers(dp: Dispatcher, bot: Bot):

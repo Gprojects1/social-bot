@@ -8,7 +8,12 @@ EMOTIONS = [
     "Inspiring", "Mocking", "Disrespectful", "Distrustful", "Confrontational",
     "Unkind", "Insecure", "Serious", "Amused", "Resilient", "Determined",
     "Loyal", "Competitive", "Humble", "Prideful", "Empathetic", "Indifferent",
-    "Curious", "Defensive", "Cooperative", "Playful", "Cautious", "Friendly"
+    "Curious", "Defensive", "Cooperative", "Playful", "Cautious", "Friendly",
+    "Grateful", "Indebted", "Dutiful", "Expectant", "Benevolent", 
+    "Slightly Superior", "Patient", "Suspicious", "Pragmatic", "Admiring",
+    "Hesitant", "Unaware", "Neutral", "Inspired", "Flattered", "Surprised",
+    "Protective", "Nurturing", "Dependent", "Secure", "Obedient", "Driven",
+    "Focused"
 ]
 
 EMOTION_INDEX = {emotion: i for i, emotion in enumerate(EMOTIONS)}
